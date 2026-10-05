@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN PANEL - PRO EDITION</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --danger: #ff3333;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { 
+            background: var(--bg-dark); 
+            color: white; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 204, 255, 0.05) 0%, transparent 20%);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 450px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i { color: var(--primary); }
+
+        /* INPUTS */
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group label {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 255, 136, 0.1);
+        }
+
+        /* BUTTONS */
+        .btn-action {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-voucher {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
+        }
+        .btn-voucher:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+        .btn-wa {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+        .btn-wa:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+        .btn-pass {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
+        }
+        .btn-pass:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+        /* RESULT BOX */
+        .result-area {
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed #475569;
+            border-radius: 12px;
+            padding: 15px;
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .code-display {
+            background: #0f172a;
+            color: var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            text-align: center;
+            margin-bottom: 12px;
+            border: 1px solid #1e293b;
+            min-height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-copy {
+            width: 100%;
+            padding: 10px;
+            background: #334155;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-copy:hover { background: #475569; }
+        .btn-copy.copied { background: var(--primary); color: black; }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            color: #475569;
+            font-size: 0.8rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1><i class="fa-solid fa-shield-cat"></i> ADMIN PANEL</h1>
+            <p>Control Center & Generator Tool</p>
+        </div>
+
+        <!-- BAGIAN 1: GENERATOR VOUCHER -->
+        <div class="card">
+            <div class="section-title">
+                <i class="fa-solid fa-ticket"></i> GENERATE SALDO
+            </div>
+            
+            <div class="input-group">
+                <label>MASUKKAN NOMINAL (RP)</label>
+                <input type="number" id="inputSaldo" placeholder="Contoh: 50000">
+            </div>
+            
+            <button class="btn-action btn-voucher" onclick="buatVoucher()">
+                <i class="fa-solid fa-bolt"></i> BUAT VOUCHER
+            </button>
+            
+            <div id="voucherContainer" class="result-area">
+                <div id="hasilVoucher" class="code-display">...</div>
+                
+                <button class="btn-copy" id="btnCopyVoucher" onclick="salin('btnCopyVoucher', 'hasilVoucher')">
+                    <i class="fa-regular fa-copy"></i> SALIN KODE
+                </button>
+                
+                <button class="btn-action btn-wa" onclick="kirimWA()">
+                    <i class="fa-brands fa-whatsapp"></i> KIRIM VIA WHATSAPP
+                </button>
+            </div>
+        </div>
+
+        <!-- BAGIAN 2: GENERATOR PASSWORD MASTER -->
+        <div class="card">
+            <div class="section-title">
+                <i class="fa-solid fa-key"></i> MASTER KEY GEN
+            </div>
+            
+            <div class="input-group">
+                <label>NAMA / PASSWORD DASAR</label>
+                <input type="text" id="inputPassAdmin" placeholder="Contoh: ADMIN123">
+            </div>
+            
+            <button class="btn-action btn-pass" onclick="buatPassword()">
+                <i class="fa-solid fa-lock"></i> ENKRIPSI KUNCI
+            </button>
+            
+            <div id="passContainer" class="result-area">
+                <div id="hasilPass" class="code-display">...</div>
+                <button class="btn-copy" id="btnCopyPass" onclick="salin('btnCopyPass', 'hasilPass')">
+                    <i class="fa-regular fa-copy"></i> SALIN MASTER KEY
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 SYSTEM SECURE • AUTO-FIX VERSION
+        </div>
+    </div>
+
+    <script>
+        let currentVoucherCode = ""; 
+
+        // FUNGSI BUAT VOUCHER
+        function buatVoucher() {
+            const nominal = document.getElementById('inputSaldo').value;
+            if(!nominal || nominal <= 0) { 
+                alert("⚠️ Masukkan nominal saldo yang valid!"); 
+                return; 
+            }
+
+            // Algoritma pembuatan kode acak
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let randomPart = "";
+            for (let i = 0; i < 40; i++) {
+                randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            const rawData = `${nominal}_${randomPart}`;
+            const finalCode = btoa(rawData); 
+            
+            currentVoucherCode = finalCode; 
+
+            const container = document.getElementById('voucherContainer');
+            const box = document.getElementById('hasilVoucher');
+            
+            container.style.display = 'block';
+            box.innerText = finalCode;
+            
+            resetBtn('btnCopyVoucher');
+        }
+
+        // FUNGSI KIRIM KE WHATSAPP
+        function kirimWA() {
+            if(!currentVoucherCode) { alert("Buat voucher terlebih dahulu!"); return; }
+            
+            const pesan = `*🎟️ VOUCHER SALDO RED DRAGON*\n\nHalo! Berikut adalah kode voucher untuk menambah saldo generator:\n\n*KODE:* \`${currentVoucherCode}\`\n\nSilakan tempel kode tersebut di menu Input Voucher. Selamat menggunakan!`;
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(pesan)}`;
+            
+            window.open(url, '_blank');
+        }
+
+        // FUNGSI BUAT PASSWORD ADMIN
+        function buatPassword() {
+            const pass = document.getElementById('inputPassAdmin').value.trim();
+            if(!pass) { alert("⚠️ Masukkan kata kunci dasar!"); return; }
+
+            const random = Math.random().toString(36).substring(7).toUpperCase();
+            // Format output sesuai request sebelumnya (MASTER_...)
+            const masterCode = `MASTER_${pass}_${random}`;
+
+            const container = document.getElementById('passContainer');
+            const box = document.getElementById('hasilPass');
+            
+            container.style.display = 'block';
+            box.innerText = masterCode;
+            
+            resetBtn('btnCopyPass');
+        }
+
+        // FUNGSI SALIN UNIVERSAL
+        function salin(btnId, boxId) {
+            const text = document.getElementById(boxId).innerText;
+            const btn = document.getElementById(btnId);
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> BERHASIL DISALIN';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(() => {
+                // Fallback untuk browser lama
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed"; textArea.style.left = "-9999px";
+                document.body.appendChild(textArea); textArea.select();
+                try { 
+                    document.execCommand('copy'); 
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> BERHASIL DISALIN';
+                    btn.classList.add('copied');
+                } catch (err) { alert("Gagal menyalin otomatis."); }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function resetBtn(id) {
+            const btn = document.getElementById(id);
+            // Mengembalikan teks tombol ke kondisi awal
+            if(id === 'btnCopyVoucher') {
+                btn.innerHTML = '<i class="fa-regular fa-copy"></i> SALIN KODE';
+            } else {
+                btn.innerHTML = '<i class="fa-regular fa-copy"></i> SALIN MASTER KEY';
+            }
+            btn.classList.remove('copied');
+        }
+    </script>
+</body>
+</html>
